@@ -187,6 +187,31 @@ class DAO:
         finally:
             cursor.close()
 
+    def selec_autor_edit(self,id):
+        try:
+            cursor = self.connection.cursor()
+            sql = 'SELECT * FROM autores WHERE id = %s'
+            cursor.execute(sql,(id,))
+            respuesta = cursor.fetchone()
+            return respuesta
+        except Error as e:
+            print(f'Error al recuperar autor')
+            return []
+        finally:
+            cursor.close()
+
+    def upd_autor(self,id,nombre,nacionalidad,fecha_nacimiento):
+        try:
+            cursor =self.connection.cursor()
+            sql = 'UPDATE `autores` SET `nombre`=%s,`nacionalidad`=%s,`fecha_nacimiento`=%s WHERE id = %s'
+            values = (nombre,nacionalidad,fecha_nacimiento,id)
+            cursor.execute(sql,values)
+            print("Actualizado correctamente.")
+        except Error as e:
+            print(f"Error al actualizar: {e}")
+        finally:
+            cursor.close()
+
     #  Gestión de Productos
 
     def agregar_producto(self, nombre, tipo, editorial_id, descripcion):
@@ -245,6 +270,30 @@ class DAO:
         finally:
             cursor.close()
 
+    def selec_producto_edit(self,id):
+        try:
+            cursor = self.connection.cursor()
+            sql = 'SELECT * FROM productos WHERE id = %s'
+            cursor.execute(sql,(id,))
+            respuesta = cursor.fetchone()
+            return respuesta
+        except Error as e:
+            print(f'Error al recuperar producto')
+            return []
+        finally:
+            cursor.close()
+
+    def upd_producto(self,id,nombre,tipo,descripcion):
+        try:
+            cursor =self.connection.cursor()
+            sql = 'UPDATE `productos` SET `nombre`=%s,`tipo`=%s,`descripcion`=%s WHERE id = %s'
+            values = (nombre,tipo,descripcion,id)
+            cursor.execute(sql,values)
+            print("Actualizado correctamente.")
+        except Error as e:
+            print(f"Error al actualizar: {e}")
+        finally:
+            cursor.close()
 
     # Gestión de Bodegas
 
@@ -285,6 +334,31 @@ class DAO:
             print("Bodega eliminada con exito.")
         except Error as x:
             print(f'Error al eliminar bodega: {x}')
+        finally:
+            cursor.close()
+
+    def selec_bodega_edit(self,id):
+        try:
+            cursor = self.connection.cursor()
+            sql = 'SELECT * FROM bodegas WHERE id = %s'
+            cursor.execute(sql,(id,))
+            respuesta = cursor.fetchone()
+            return respuesta
+        except Error as e:
+            print(f'Error al recuperar bodega')
+            return []
+        finally:
+            cursor.close()
+
+    def upd_bodega(self,id,nombre,direccion,capacidad):
+        try:
+            cursor =self.connection.cursor()
+            sql = 'UPDATE `bodegas` SET `nombre`=%s,`direccion`=%s,`capacidad`=%s WHERE id = %s'
+            values = (nombre,direccion,capacidad,id)
+            cursor.execute(sql,values)
+            print("Actualizado correctamente.")
+        except Error as e:
+            print(f"Error al actualizar: {e}")
         finally:
             cursor.close()
 

@@ -212,6 +212,10 @@ class GestionProductosFrame(tk.Frame):
                                        command=self.form_eliminar_producto)
         self.boton_agregar.pack(pady=10)
 
+        self.boton_agregar = tk.Button(self, text="Editar Producto", font=("Arial", 14), bg="#007BFF", fg="white",
+                                       command=self.form_select_producto)
+        self.boton_agregar.pack(pady=10)
+
         self.boton_listar = tk.Button(self, text="Listar Productos", font=("Arial", 14), bg="#007BFF", fg="white",
                                       command=self.listar_productos)
         self.boton_listar.pack(pady=10)
@@ -305,6 +309,60 @@ class GestionProductosFrame(tk.Frame):
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
+    def form_select_producto(self):
+        """Ventana seleeccion por id"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Seleccion de producto por id.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+
+        tk.Label(ventana, text="Id de producto a editar:",font=('Arial',12)).pack(pady=5)
+        id_entry = tk.Entry(ventana,font=("Arial",12))
+        id_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Seleccionar",font=("Arial",12),bg="#007BFF" , fg="white",
+                  command=lambda:self.selec_producto_edit(id_entry.get(),ventana)).pack(pady=5)
+
+    def selec_producto_edit(self,x,ventana):
+        producto = self.master.dao.selec_producto_edit(x)
+        self.upd_producto(producto[0])
+
+    def upd_producto(self,x1):
+        """ventana de edicion"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Actualizar producto.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+        
+        tk.Label(ventana,text=f"Id del producto a editar:{x1}")
+        id_entry = x1
+        tk.Label(ventana,text="Nuevo nombre del producto.",font=("Arial",12)).pack(pady=5)
+        name_entry = tk.Entry(ventana, font=("Arial",12))
+        name_entry.pack(pady=5)
+
+        tk.Label(ventana,text="Nuevo tipo del producto.",font=("Arial",12)).pack(pady=5)
+        type_entry = tk.Entry(ventana,font=("Arial",12))
+        type_entry.pack(pady=5)
+
+        tk.Label(ventana,text="Nueva descripcion del producto.",font=("Arial",12)).pack(pady=5)
+        desc_entry = tk.Entry(ventana,font=("Arial",12))
+        desc_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Actualizar",font=("Arial",12) , bg="#007BFF" , fg="white",
+                  command=lambda: self.guardar_edit(id_entry,name_entry.get(),type_entry.get(),desc_entry.get(),ventana)).pack(pady=10)
+
+    
+    def guardar_edit(self,x1,x2,x3,x4,ventana):
+        if not x1 or not x2 or not x3 or not x4:
+            messagebox.showerror("Error","Todos los campos son obligatorios.")
+            return
+        try:
+            self.master.dao.upd_producto(x1,x2,x3,x4)
+            messagebox.showinfo("Exito","Producto actualizada con exito.")
+            ventana.destroy()
+        except Exception as e:
+            messagebox.showerror("Error",f"No se pudo actualizar el producto: {e}")
+
     def listar_productos(self):
         productos = self.master.dao.obtener_productos()
         mensaje = "\n".join([f"{p["id"]} - {p["nombre"]} ({p["tipo"]})" for p in productos])
@@ -323,13 +381,17 @@ class GestionAutoresFrame(tk.Frame):
                                        command=self.abrir_formulario_agregar_autor)
         self.boton_agregar.pack(pady=10)
 
-        self.boton_agregar = tk.Button(self, text="Eliminar Autor", font=("Arial", 14), bg="#007BFF", fg="white",
+        self.boton_eliminar = tk.Button(self, text="Eliminar Autor", font=("Arial", 14), bg="#007BFF", fg="white",
                                        command=self.form_eliminar_autor)
-        self.boton_agregar.pack(pady=10)
+        self.boton_eliminar.pack(pady=10)
 
-        self.boton_agregar = tk.Button(self, text="Listar autores", font=("Arial", 14), bg="#007BFF", fg="white",
+        self.boton_editar = tk.Button(self, text="Editar Autor", font=("Arial", 14), bg="#007BFF", fg="white",
+                                       command=self.form_select_autor)
+        self.boton_editar.pack(pady=10)
+
+        self.boton_listar = tk.Button(self, text="Listar autores", font=("Arial", 14), bg="#007BFF", fg="white",
                                        command=self.listar_autor)
-        self.boton_agregar.pack(pady=10)
+        self.boton_listar.pack(pady=10)
 
         self.boton_volver = tk.Button(self, text="Volver", font=("Arial", 14), bg="#DC3545", fg="white",
                                       command=lambda: master.cambiar_frame(AdminFrame))
@@ -409,6 +471,60 @@ class GestionAutoresFrame(tk.Frame):
             messagebox.showerror("Error", str(e))
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
+
+    def form_select_autor(self):
+        """Ventana seleeccion por id"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Seleccion de autor por id.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+
+        tk.Label(ventana, text="Id de autor a editar:",font=('Arial',12)).pack(pady=5)
+        id_entry = tk.Entry(ventana,font=("Arial",12))
+        id_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Seleccionar",font=("Arial",12),bg="#007BFF" , fg="white",
+                  command=lambda:self.selec_autor_edit(id_entry.get(),ventana)).pack(pady=5)
+
+    def selec_autor_edit(self,x,ventana):
+        autor = self.master.dao.selec_autor_edit(x)
+        self.upd_autor(autor[0])
+
+    def upd_autor(self,x1):
+        """ventana de edicion"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Actualizar autor.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+        
+        tk.Label(ventana,text=f"Id del autor a editar:{x1}")
+        id_entry = x1
+        tk.Label(ventana,text="Nuevo nombre del autor.",font=("Arial",12)).pack(pady=5)
+        name_entry = tk.Entry(ventana, font=("Arial",12))
+        name_entry.pack(pady=5)
+
+        tk.Label(ventana,text="Nueva nacionalidad del autor.",font=("Arial",12)).pack(pady=5)
+        nacionality_entry = tk.Entry(ventana,font=("Arial",12))
+        nacionality_entry.pack(pady=5)
+
+        tk.Label(ventana,text="Nueva fehca de nacimiento del autor.",font=("Arial",12)).pack(pady=5)
+        date_entry = tk.Entry(ventana,font=("Arial",12))
+        date_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Actualizar",font=("Arial",12) , bg="#007BFF" , fg="white",
+                  command=lambda: self.guardar_edit(id_entry,name_entry.get(),nacionality_entry.get(),date_entry.get(),ventana)).pack(pady=10)
+
+    
+    def guardar_edit(self,x1,x2,x3,x4,ventana):
+        if not x1 or not x2 or not x3 or not x4:
+            messagebox.showerror("Error","Todos los campos son obligatorios.")
+            return
+        try:
+            self.master.dao.upd_autor(x1,x2,x3,x4)
+            messagebox.showinfo("Exito","Producto actualizada con exito.")
+            ventana.destroy()
+        except Exception as e:
+            messagebox.showerror("Error",f"No se pudo actualizar al autor: {e}")
 
     def listar_autor(self):
         autores = self.master.dao.obtener_autores()
@@ -602,6 +718,10 @@ class GestionBodegasFrame(tk.Frame):
                                         command=self.form_eliminar)
         self.boton_eliminar.pack(pady=10)
 
+        self.boton_editar = tk.Button(self, text="Editar Bodega", font=("Arial", 14) , bg="#007BFF",fg="white",
+                                        command=self.form_select_bodega)
+        self.boton_editar.pack(pady=10)
+
         self.boton_listar = tk.Button(self, text="Listar Bodegas", font=("Arial", 14), bg="#007BFF", fg="white",
                                       command=self.listar_bodegas)
         self.boton_listar.pack(pady=10)
@@ -689,6 +809,60 @@ class GestionBodegasFrame(tk.Frame):
             messagebox.showerror("Error", str(e))
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
+
+    def form_select_bodega(self):
+        """Ventana seleeccion por id"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Seleccion de bodega por id.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+
+        tk.Label(ventana, text="Id de bodega a editar:",font=('Arial',12)).pack(pady=5)
+        id_entry = tk.Entry(ventana,font=("Arial",12))
+        id_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Seleccionar",font=("Arial",12),bg="#007BFF" , fg="white",
+                  command=lambda:self.selec_bodega_edit(id_entry.get(),ventana)).pack(pady=5)
+
+    def selec_bodega_edit(self,x,ventana):
+        bodega = self.master.dao.selec_bodega_edit(x)
+        self.upd_bodega(bodega[0])
+
+    def upd_bodega(self,x1):
+        """ventana de edicion"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Actualizar bodega.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+        
+        tk.Label(ventana,text=f"Id del bodega a editar:{x1}")
+        id_entry = x1
+        tk.Label(ventana,text="Nuevo nombre del bodega.",font=("Arial",12)).pack(pady=5)
+        name_entry = tk.Entry(ventana, font=("Arial",12))
+        name_entry.pack(pady=5)
+
+        tk.Label(ventana,text="Nueva direccion de la bodega.",font=("Arial",12)).pack(pady=5)
+        direccion_entry = tk.Entry(ventana,font=("Arial",12))
+        direccion_entry.pack(pady=5)
+
+        tk.Label(ventana,text="Nueva capacidad de la bodega.",font=("Arial",12)).pack(pady=5)
+        capacity_entry = tk.Entry(ventana,font=("Arial",12))
+        capacity_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Actualizar",font=("Arial",12) , bg="#007BFF" , fg="white",
+                  command=lambda: self.guardar_edit(id_entry,name_entry.get(),direccion_entry.get(),capacity_entry.get(),ventana)).pack(pady=10)
+
+    
+    def guardar_edit(self,x1,x2,x3,x4,ventana):
+        if not x1 or not x2 or not x3 or not x4:
+            messagebox.showerror("Error","Todos los campos son obligatorios.")
+            return
+        try:
+            self.master.dao.upd_bodega(x1,x2,x3,x4)
+            messagebox.showinfo("Exito","Bodega actualizada con exito.")
+            ventana.destroy()
+        except Exception as e:
+            messagebox.showerror("Error",f"No se pudo actualizar la bodega: {e}")
 
     def listar_bodegas(self):
         bodegas = self.master.dao.obtener_bodegas()
