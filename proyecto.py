@@ -266,43 +266,43 @@ class GestionProductosFrame(tk.Frame):
             messagebox.showerror("Error", f"No se pudo agregar el producto: {e}")
 
     def form_eliminar_producto(self):
-        '''Ventana de ingreso de id'''
+        """Ventana de ingreso de id"""
         ventana = tk.Toplevel(self)
-        ventana.title('Eliminar producto.')
-        ventana.geometry('400x300')
+        ventana.title("Eliminar producto.")
+        ventana.geometry("400x300")
         ventana.resizable(False, False)
 
-        tk.Label(ventana, text='Id del producto a eliminar:', font=('Arial', 12)).pack(pady=5)
-        id_entry = tk.Entry(ventana, font=('Arial', 12))
+        tk.Label(ventana, text="Id del producto a eliminar:", font=("Arial", 12)).pack(pady=5)
+        id_entry = tk.Entry(ventana, font=("Arial", 12))
         id_entry.pack(pady=5)
 
         # Aquí hacemos el ajuste para pasar el id correctamente al método eliminar_bodega
-        tk.Button(ventana, text='Seleccionar', font=('Arial', 12), bg='#007BFF', fg='White',
+        tk.Button(ventana, text="Seleccionar", font=("Arial", 12), bg="#007BFF", fg="White",
                 command=lambda: self.eliminar_producto(id_entry.get(), ventana)).pack(pady=10)
 
     def eliminar_producto(self, x, ventana):
-        '''eliminar producto por id'''
+        """eliminar producto por id"""
         if not x:
-            messagebox.showerror('Error', 'Ingresa el id de un producto a borrar.')
+            messagebox.showerror("Error", "Ingresa el id de un producto a borrar.")
             return
 
         try:
             x = int(x)  # Convierte a entero    
             if x <= 0:
-                raise ValueError('Ingresa un id valido.')
+                raise ValueError("Ingresa un id valido.")
 
             # Llama al método eliminar_producto de la clase DAO, pasando el id como argumento
             self.master.dao.eliminar_producto(x)
-            messagebox.showinfo('Exito', 'Producto eliminado con exito.')
+            messagebox.showinfo("Exito", "Producto eliminado con exito.")
             ventana.destroy()
         except ValueError as e:
-            messagebox.showerror('Error', str(e))
+            messagebox.showerror("Error", str(e))
         except Exception as e:
-            messagebox.showerror('Error', f'Ocurrió un error inesperado: {str(e)}')
+            messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
     def listar_productos(self):
         productos = self.master.dao.obtener_productos()
-        mensaje = "\n".join([f"{p['id']} - {p['nombre']} ({p['tipo']})" for p in productos])
+        mensaje = "\n".join([f"{p["id"]} - {p["nombre"]} ({p["tipo"]})" for p in productos])
         messagebox.showinfo("Lista de Productos", mensaje if mensaje else "No hay productos disponibles.")
 
 class GestionAutoresFrame(tk.Frame):
@@ -310,7 +310,7 @@ class GestionAutoresFrame(tk.Frame):
         super().__init__(master)
 
         # Titulo
-        self.title = tk.Label(self, text='Gestion de Autores' , font=('Arial' , 24 , 'bold') , bg = '#ffffff', fg="#333333")
+        self.title = tk.Label(self, text="Gestion de Autores" , font=("Arial" , 24 , "bold") , bg = "#ffffff", fg="#333333")
         self.title.pack(pady=20)
 
         #botones
@@ -371,44 +371,44 @@ class GestionAutoresFrame(tk.Frame):
             messagebox.showerror("Error", f"No se pudo agregar al autor: {e}") 
 
     def form_eliminar_autor(self):
-        '''Ventana de ingreso de id'''
+        """Ventana de ingreso de id"""
         ventana = tk.Toplevel(self)
-        ventana.title('Eliminar autor.')
-        ventana.geometry('400x300')
+        ventana.title("Eliminar autor.")
+        ventana.geometry("400x300")
         ventana.resizable(False, False)
 
-        tk.Label(ventana, text='Id del autor a eliminar:', font=('Arial', 12)).pack(pady=5)
-        id_entry = tk.Entry(ventana, font=('Arial', 12))
+        tk.Label(ventana, text="Id del autor a eliminar:", font=("Arial", 12)).pack(pady=5)
+        id_entry = tk.Entry(ventana, font=("Arial", 12))
         id_entry.pack(pady=5)
 
         # Aquí hacemos el ajuste para pasar el id correctamente al método eliminar_bodega
-        tk.Button(ventana, text='Seleccionar', font=('Arial', 12), bg='#007BFF', fg='White',
+        tk.Button(ventana, text="Seleccionar", font=("Arial", 12), bg="#007BFF", fg="White",
                 command=lambda: self.eliminar_autor(id_entry.get(), ventana)).pack(pady=10)
 
     def eliminar_autor(self, x, ventana):
-        '''eliminar autor por id'''
+        """eliminar autor por id"""
         if not x:
-            messagebox.showerror('Error', 'Ingresa el id de un autor a borrar.')
+            messagebox.showerror("Error", "Ingresa el id de un autor a borrar.")
             return
 
         try:
             x = int(x)  # Convierte a entero    
             if x <= 0:
-                raise ValueError('Ingresa un id valido.')
+                raise ValueError("Ingresa un id valido.")
 
             # Llama al método eliminar_autor de la clase DAO, pasando el id como argumento
             self.master.dao.eliminar_autor(x)
-            messagebox.showinfo('Exito', 'Autor eliminado con exito.')
+            messagebox.showinfo("Exito", "Autor eliminado con exito.")
             ventana.destroy()
         except ValueError as e:
-            messagebox.showerror('Error', str(e))
+            messagebox.showerror("Error", str(e))
         except Exception as e:
-            messagebox.showerror('Error', f'Ocurrió un error inesperado: {str(e)}')
+            messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
     def listar_autor(self):
         autores = self.master.dao.obtener_autores()
-        respuesta = '\n'.join([f'{p['id']} - {p['nombre']}({p['nacionalidad']})' for p in autores])
-        messagebox.showinfo('Lista de autores' , respuesta if respuesta else 'No hay autores para mostrar')
+        respuesta = "\n".join([f"{p["id"]} - {p["nombre"]}({p["nacionalidad"]})" for p in autores])
+        messagebox.showinfo("Lista de autores" , respuesta if respuesta else "No hay autores para mostrar")
 
 class GestionEditorialesFrame(tk.Frame):
     def __init__(self,master):
@@ -477,82 +477,82 @@ class GestionEditorialesFrame(tk.Frame):
             messagebox.showerror("Error", f"No se pudo agregar la editorial: {e}")
 
     def form_eliminar_editorial(self):
-        '''Ventana de ingreso de id'''
+        """Ventana de ingreso de id"""
         ventana = tk.Toplevel(self)
-        ventana.title('Eliminar editorial.')
-        ventana.geometry('400x300')
+        ventana.title("Eliminar editorial.")
+        ventana.geometry("400x300")
         ventana.resizable(False, False)
 
-        tk.Label(ventana, text='Id de la editorial a eliminar:', font=('Arial', 12)).pack(pady=5)
-        id_entry = tk.Entry(ventana, font=('Arial', 12))
+        tk.Label(ventana, text="Id de la editorial a eliminar:", font=("Arial", 12)).pack(pady=5)
+        id_entry = tk.Entry(ventana, font=("Arial", 12))
         id_entry.pack(pady=5)
 
         # Aquí hacemos el ajuste para pasar el id correctamente al método eliminar_bodega
-        tk.Button(ventana, text='Seleccionar', font=('Arial', 12), bg='#007BFF', fg='White',
+        tk.Button(ventana, text="Seleccionar", font=("Arial", 12), bg="#007BFF", fg="White",
                 command=lambda: self.eliminar_editorial(id_entry.get(), ventana)).pack(pady=10)
 
     def eliminar_editorial(self, x, ventana):
-        '''eliminar editorial por id'''
+        """eliminar editorial por id"""
         if not x:
-            messagebox.showerror('Error', 'Ingresa el id de una editorial a borrar.')
+            messagebox.showerror("Error", "Ingresa el id de una editorial a borrar.")
             return
 
         try:
             x = int(x)  # Convierte a entero    
             if x <= 0:
-                raise ValueError('Ingresa un id valido.')
+                raise ValueError("Ingresa un id valido.")
 
             # Llama al método eliminar_bodegas de la clase DAO, pasando el id como argumento
             self.master.dao.eliminar_editorial(x)
-            messagebox.showinfo('Exito', 'Editorial eliminada con exito.')
+            messagebox.showinfo("Exito", "Editorial eliminada con exito.")
             ventana.destroy()
         except ValueError as e:
-            messagebox.showerror('Error', str(e))
+            messagebox.showerror("Error", str(e))
         except Exception as e:
-            messagebox.showerror('Error', f'Ocurrió un error inesperado: {str(e)}')
+            messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
     def selec_editorial_edit(self,x):
         editorial = self.master.dao.selec_editar_edit(x)
-        x = '\n'.join([f'{i['id']} - {i['nombre']} - {i['telefono']} - {i['direccion']} - {i['email']}' for i in editorial])
-        messagebox.showinfo('Editorial seleccionada.' , x if x else 'No hay editorial.')
+        x = "\n".join([f"{i["id"]} - {i["nombre"]} - {i["telefono"]} - {i["direccion"]} - {i["email"]}" for i in editorial])
+        messagebox.showinfo("Editorial seleccionada." , x if x else "No hay editorial.")
 
     def upd_editorial(self,x1):
-        '''ventana de edicion'''
+        """ventana de edicion"""
         ventana = tk.Toplevel(self)
-        ventana.title('Actualizar editorial.')
-        ventana.geometry('400x300')
+        ventana.title("Actualizar editorial.")
+        ventana.geometry("400x300")
         ventana.resizable(False,False)
         
-        tk.Label(ventana,text=f'Id de la editorial a editar:{x1}')
+        tk.Label(ventana,text=f"Id de la editorial a editar:{x1}")
 
-        tk.Label(ventana,text='Nuevo nombre de la editorial.',font=('Arial',12)).pack(pady=5)
-        name_entry = tk.Entry(ventana, font=('Arial',12))
+        tk.Label(ventana,text="Nuevo nombre de la editorial.",font=("Arial",12)).pack(pady=5)
+        name_entry = tk.Entry(ventana, font=("Arial",12))
         name_entry.pack(pady=5)
 
-        tk.Label(ventana,text='Nueva direccion de la editorial.',font=('Arial',12)).pack(pady=5)
-        direccion_entry = tk.Entry(ventana,font=('Arial',12))
+        tk.Label(ventana,text="Nueva direccion de la editorial.",font=("Arial",12)).pack(pady=5)
+        direccion_entry = tk.Entry(ventana,font=("Arial",12))
         direccion_entry.pack(pady=5)
 
-        tk.Label(ventana,text='Nuevo telefono de la editorial.',font=('Arial',12)).pack(pady=5)
-        telefono_entry = tk.Entry(ventana,font=('Arial',12))
+        tk.Label(ventana,text="Nuevo telefono de la editorial.",font=("Arial",12)).pack(pady=5)
+        telefono_entry = tk.Entry(ventana,font=("Arial",12))
         telefono_entry.pack(pady=5)
 
-        tk.Label(ventana,text='Nuevo email de la editorial.',font=('Arial',12)).pack(pady=5)
-        email_entry = tk.Entry(ventana,font=('Arial',12))
+        tk.Label(ventana,text="Nuevo email de la editorial.",font=("Arial",12)).pack(pady=5)
+        email_entry = tk.Entry(ventana,font=("Arial",12))
         email_entry.pack(pady=5)
 
-        tk.Button(ventana,text='Actualizar',font=('Arial',12) , bg='#007BFF' , fg='white')
+        tk.Button(ventana,text="Actualizar",font=("Arial",12) , bg="#007BFF" , fg="white")
 
     
     def guardar_edit(self,id,nombre,direccion,telefono,correo):
         if not id or not nombre or not direccion or not telefono or not correo:
-            messagebox.showerror('Error','Todos los campos son obligatorios.')
+            messagebox.showerror("Error","Todos los campos son obligatorios.")
             return
 
 
     def listar_Editorial(self):
         editoriales = self.master.dao.obtener_editoriales()
-        mensaje = "\n".join([f" Id: {p['id']} - Nombre: {p['nombre']}" for p in editoriales])
+        mensaje = "\n".join([f" Id: {p["id"]} - Nombre: {p["nombre"]}" for p in editoriales])
         messagebox.showinfo("Lista de editoriales", mensaje if mensaje else "No hay editoriales disponibles.")
 
 class GestionBodegasFrame(tk.Frame):
@@ -568,7 +568,7 @@ class GestionBodegasFrame(tk.Frame):
                                        command=self.abrir_formulario_agregar)
         self.boton_agregar.pack(pady=10)
 
-        self.boton_eliminar = tk.Button(self, text='Eliminar Bodega', font=('Arial', 14) , bg='#007BFF',fg='white',
+        self.boton_eliminar = tk.Button(self, text="Eliminar Bodega", font=("Arial", 14) , bg="#007BFF",fg="white",
                                         command=self.form_eliminar)
         self.boton_eliminar.pack(pady=10)
 
@@ -626,43 +626,43 @@ class GestionBodegasFrame(tk.Frame):
             messagebox.showerror("Error", f"No se pudo agregar la bodega: {e}")  
 
     def form_eliminar(self):
-        '''Ventana de ingreso de id'''
+        """Ventana de ingreso de id"""
         ventana = tk.Toplevel(self)
-        ventana.title('Eliminar bodega.')
-        ventana.geometry('400x300')
+        ventana.title("Eliminar bodega.")
+        ventana.geometry("400x300")
         ventana.resizable(False, False)
 
-        tk.Label(ventana, text='Id de la bodega a eliminar:', font=('Arial', 12)).pack(pady=5)
-        id_entry = tk.Entry(ventana, font=('Arial', 12))
+        tk.Label(ventana, text="Id de la bodega a eliminar:", font=("Arial", 12)).pack(pady=5)
+        id_entry = tk.Entry(ventana, font=("Arial", 12))
         id_entry.pack(pady=5)
 
         # Aquí hacemos el ajuste para pasar el id correctamente al método eliminar_bodega
-        tk.Button(ventana, text='Seleccionar', font=('Arial', 12), bg='#007BFF', fg='White',
+        tk.Button(ventana, text="Seleccionar", font=("Arial", 12), bg="#007BFF", fg="White",
                 command=lambda: self.eliminar_bodega(id_entry.get(), ventana)).pack(pady=10)
 
     def eliminar_bodega(self, x, ventana):
-        '''eliminar bodega por id'''
+        """eliminar bodega por id"""
         if not x:
-            messagebox.showerror('Error', 'Ingresa el id de una bodega a borrar.')
+            messagebox.showerror("Error", "Ingresa el id de una bodega a borrar.")
             return
 
         try:
             x = int(x)  # Convierte a entero    
             if x <= 0:
-                raise ValueError('Ingresa un id valido.')
+                raise ValueError("Ingresa un id valido.")
 
             # Llama al método eliminar_bodegas de la clase DAO, pasando el id como argumento
             self.master.dao.eliminar_bodegas(x)
-            messagebox.showinfo('Exito', 'Bodega eliminada con exito.')
+            messagebox.showinfo("Exito", "Bodega eliminada con exito.")
             ventana.destroy()
         except ValueError as e:
-            messagebox.showerror('Error', str(e))
+            messagebox.showerror("Error", str(e))
         except Exception as e:
-            messagebox.showerror('Error', f'Ocurrió un error inesperado: {str(e)}')
+            messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
     def listar_bodegas(self):
         bodegas = self.master.dao.obtener_bodegas()
-        mensaje = "\n".join([f"{b['id']} - {b['nombre']}" for b in bodegas])
+        mensaje = "\n".join([f"{b["id"]} - {b["nombre"]}" for b in bodegas])
         messagebox.showinfo("Lista de Bodegas", mensaje if mensaje else "No hay bodegas disponibles.")
 
 class GenerarInformesFrame(tk.Frame):
@@ -700,7 +700,7 @@ class GenerarInformesFrame(tk.Frame):
             informe = []
             for item in inventario:
                 informe.append(
-                    f"Bodega: {item['bodega']} - Producto: {item['producto']} - Tipo: {item['tipo']} - Cantidad: {item['cantidad']}"
+                    f"Bodega: {item["bodega"]} - Producto: {item["producto"]} - Tipo: {item["tipo"]} - Cantidad: {item["cantidad"]}"
                 )
 
             mensaje = "\n".join(informe)
@@ -710,7 +710,7 @@ class GenerarInformesFrame(tk.Frame):
 
     def generar_informe_movimientos(self):
         movimientos = self.master.dao.obtener_movimientos()
-        mensaje = "\n".join([f"ID: {m['id']} - Origen: {m['bodega_origen_id']} - Destino: {m['bodega_destino_id']}" for m in movimientos])
+        mensaje = "\n".join([f"ID: {m["id"]} - Origen: {m["bodega_origen_id"]} - Destino: {m["bodega_destino_id"]}" for m in movimientos])
         messagebox.showinfo("Informe de Movimientos", mensaje if mensaje else "No hay movimientos registrados.")
 
 class UserFrame(tk.Frame):
