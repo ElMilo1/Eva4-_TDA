@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from dao import DAO  # Asegúrate de que el archivo dao.py esté correctamente configurado
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGES_DIR = os.path.join(BASE_DIR, "imagenes")
 
 class Aplicacion(tk.Tk):
     def __init__(self):
@@ -26,13 +29,15 @@ class Aplicacion(tk.Tk):
         self.frame_actual = frame_class(self)
         self.frame_actual.pack(fill="both", expand=True)
 
-    def cargar_imagen(self, path, size):
+    def cargar_imagen(self, nombre, size):
+        """Carga una imagen desde la carpeta 'imagenes'."""
+        ruta = os.path.join(IMAGES_DIR, nombre)
         try:
-            image = Image.open(path)
+            image = Image.open(ruta)
             image = image.resize(size, Image.LANCZOS)
             return ImageTk.PhotoImage(image)
         except FileNotFoundError:
-            print(f"Archivo no encontrado: {path}")
+            print(f"Archivo no encontrado: {ruta}")
             return None
 
 class LoginFrame(tk.Frame):
@@ -40,7 +45,7 @@ class LoginFrame(tk.Frame):
         super().__init__(master)
 
         # Imagen de fondo
-        self.bg_image = master.cargar_imagen(r".\imagenes\libros.jpg", (800, 600))
+        self.bg_image = master.cargar_imagen("libros.jpg", (800, 600))
         if self.bg_image:
             self.bg_label = tk.Label(self, image=self.bg_image)
             self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
@@ -96,7 +101,7 @@ class RegistroFrame(tk.Frame):
         super().__init__(master)
 
         # Imagen de fondo
-        self.bg_image = master.cargar_imagen(r".\imagenes\registro.png", (800, 600))
+        self.bg_image = master.cargar_imagen("registro.png", (800, 600))
         if self.bg_image:
             self.bg_label = tk.Label(self, image=self.bg_image)
             self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
@@ -157,7 +162,7 @@ class AdminFrame(tk.Frame):
         super().__init__(master)
 
         # Imagen de fondo
-        self.bg_image = master.cargar_imagen(r".\imagenes\gestion.jpg", (800, 600))
+        self.bg_image = master.cargar_imagen("gestion.jpg", (800, 600))
         if self.bg_image:
             self.bg_label = tk.Label(self, image=self.bg_image)
             self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
@@ -423,9 +428,13 @@ class GestionEditorialesFrame(tk.Frame):
                                        command=self.abrir_formulario_agregar_editorial)
         self.boton_agregar.pack(pady=10)
 
-        self.boton_agregar = tk.Button(self, text="Eliminar Editorial", font=("Arial", 14), bg="#007BFF", fg="white",
+        self.boton_eliminar = tk.Button(self, text="Eliminar Editorial", font=("Arial", 14), bg="#007BFF", fg="white",
                                        command=self.form_eliminar_editorial)
-        self.boton_agregar.pack(pady=10)
+        self.boton_eliminar.pack(pady=10)
+
+        self.boton_editar = tk.Button(self, text="Editar Editorial", font=("Arial", 14), bg="#007BFF", fg="white",
+                                       command=self.form_select_editorial)
+        self.boton_editar.pack(pady=10)
 
         self.boton_listar = tk.Button(self, text="Listar Editorial", font=("Arial", 14), bg="#007BFF", fg="white",
                                       command=self.listar_Editorial)
@@ -511,10 +520,23 @@ class GestionEditorialesFrame(tk.Frame):
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
-    def selec_editorial_edit(self,x):
+    def form_select_editorial(self):
+        """Ventana sleeccion por id"""
+        ventana = tk.Toplevel(self)
+        ventana.title("Seleccion de editorial por id.")
+        ventana.geometry("400x300")
+        ventana.resizable(False,False)
+
+        tk.Label(ventana, text="Id de editorial a editar:",font=('Arial',12)).pack(pady=5)
+        id_entry = tk.Entry(ventana,font=("Arial",12))
+        id_entry.pack(pady=5)
+
+        tk.Button(ventana,text="Seleccionar",font=("Arial",12),bg="#007BFF" , fg="white",
+                  command=lambda:self.selec_editorial_edit(id_entry.get(),ventana)).pack(pady=5)
+
+    def selec_editorial_edit(self,x,ventana):
         editorial = self.master.dao.selec_editar_edit(x)
-        x = "\n".join([f"{i["id"]} - {i["nombre"]} - {i["telefono"]} - {i["direccion"]} - {i["email"]}" for i in editorial])
-        messagebox.showinfo("Editorial seleccionada." , x if x else "No hay editorial.")
+        self.upd_editorial(editorial[0])
 
     def upd_editorial(self,x1):
         """ventana de edicion"""
@@ -524,7 +546,7 @@ class GestionEditorialesFrame(tk.Frame):
         ventana.resizable(False,False)
         
         tk.Label(ventana,text=f"Id de la editorial a editar:{x1}")
-
+        id_entry = x1
         tk.Label(ventana,text="Nuevo nombre de la editorial.",font=("Arial",12)).pack(pady=5)
         name_entry = tk.Entry(ventana, font=("Arial",12))
         name_entry.pack(pady=5)
@@ -541,13 +563,21 @@ class GestionEditorialesFrame(tk.Frame):
         email_entry = tk.Entry(ventana,font=("Arial",12))
         email_entry.pack(pady=5)
 
-        tk.Button(ventana,text="Actualizar",font=("Arial",12) , bg="#007BFF" , fg="white")
+        tk.Button(ventana,text="Actualizar",font=("Arial",12) , bg="#007BFF" , fg="white",
+                  command=lambda: self.guardar_edit(id_entry,name_entry.get(),direccion_entry.get(),telefono_entry.get(),email_entry.get(),ventana)).pack(pady=10)
 
     
-    def guardar_edit(self,id,nombre,direccion,telefono,correo):
-        if not id or not nombre or not direccion or not telefono or not correo:
+    def guardar_edit(self,x1,x2,x3,x4,x5,ventana):
+        if not x1 or not x2 or not x3 or not x4 or not x5:
             messagebox.showerror("Error","Todos los campos son obligatorios.")
             return
+        try:
+            self.master.dao.upd_editorial(x1,x2,x3,x4,x5)
+            messagebox.showinfo("Exito","Editorial actualizada con exito.")
+            ventana.destroy()
+        except Exception as e:
+            messagebox.showerror("Error",f"No se pudo actualizar la editorial: {e}")
+
 
 
     def listar_Editorial(self):
@@ -718,7 +748,7 @@ class UserFrame(tk.Frame):
         super().__init__(master)
 
         # Imagen de fondo
-        self.bg_image = master.cargar_imagen(r".\imagenes\user.jpg", (800, 600))
+        self.bg_image = master.cargar_imagen("user.jpg", (800, 600))
         if self.bg_image:
             self.bg_label = tk.Label(self, image=self.bg_image)
             self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)

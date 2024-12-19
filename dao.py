@@ -133,6 +133,18 @@ class DAO:
         finally:
             cursor.close()
 
+    def upd_editorial(self,id,nombre,direccion,telefono,email):
+        try:
+            cursor =self.connection.cursor()
+            sql = 'UPDATE `editoriales` SET `nombre`="%s",`direccion`="%s",`telefono`="%s",`email`= "%s" WHERE id = "%s"'
+            values = (nombre,direccion,telefono,email,id)
+            cursor.execute(sql,values)
+            print("Actualizado correctamente.")
+        except Error as e:
+            print(f"Error al actualizar: {e}")
+        finally:
+            cursor.close()
+
     #  Gestión de Autores 
 
     def agregar_autor(self, nombre, nacionalidad=None, fecha_nacimiento=None):
